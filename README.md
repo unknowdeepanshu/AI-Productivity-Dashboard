@@ -7,7 +7,7 @@ Follow these steps to run the project locally:
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/unknowdeepanshu/AI-Productivity-Dashboard.git
 ```
 
 ### 2️⃣ Move into the project directory
