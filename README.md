@@ -11,7 +11,7 @@
 
 ### What Happened?
 
-This project was developed during [Hackathon Name] with ambitious goals. Unfortunately, we faced:
+This project was developed during [GitHub REST API Docs](https://www.wemakedevs.org/hackathons/tambo) with ambitious goals. Unfortunately, we faced:
 
 - ⚡ Power outage during final development hours
 - 👥 Team coordination challenges with incomplete task assignments
