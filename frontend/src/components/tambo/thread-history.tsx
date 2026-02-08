@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { IconUser, IconTool, IconPlus } from "@tabler/icons-react";
 import {
   type TamboThread,
   useTamboThread,
@@ -146,7 +147,7 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
         <div
           ref={ref}
           className={cn(
-            "border-flat bg-container h-full transition-all duration-300 flex-none",
+            "border-flat bg-container h-full flex-none transition-all duration-300",
             position === "left" ? "border-r" : "border-l",
             isCollapsed ? "w-12" : "w-64",
             className,
@@ -155,8 +156,8 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
         >
           <div
             className={cn(
-              "flex flex-col h-full",
-              isCollapsed ? "py-4 px-2" : "p-4",
+              "flex h-full flex-col",
+              isCollapsed ? "px-2 py-4" : "p-4",
             )} // py-4 px-2 is for better alignment when isCollapsed
           >
             {children}
@@ -185,7 +186,7 @@ const ThreadHistoryHeader = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex items-center mb-4 relative",
+        "relative mb-4 flex items-center",
         isCollapsed ? "p-1" : "p-1",
         className,
       )}
@@ -193,10 +194,10 @@ const ThreadHistoryHeader = React.forwardRef<
     >
       <h2
         className={cn(
-          "text-sm text-muted-foreground whitespace-nowrap ",
+          "text-muted-foreground text-sm whitespace-nowrap",
           isCollapsed
-            ? "opacity-0 max-w-0 overflow-hidden "
-            : "opacity-100 max-w-none transition-all duration-300 delay-75",
+            ? "max-w-0 overflow-hidden opacity-0"
+            : "max-w-none opacity-100 transition-all delay-75 duration-300",
         )}
       >
         Tambo Conversations
@@ -204,7 +205,7 @@ const ThreadHistoryHeader = React.forwardRef<
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={cn(
-          `bg-container p-1 hover:bg-backdrop transition-colors rounded-md cursor-pointer absolute flex items-center justify-center`,
+          `bg-container hover:bg-backdrop absolute flex cursor-pointer items-center justify-center rounded-md p-1 transition-colors`,
           position === "left" ? "right-1" : "left-0",
         )}
         aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -266,19 +267,19 @@ const ThreadHistoryNewButton = React.forwardRef<
       ref={ref}
       onClick={handleNewThread}
       className={cn(
-        "flex items-center rounded-md mb-4 hover:bg-backdrop transition-colors cursor-pointer relative",
-        isCollapsed ? "p-1 justify-center" : "p-2 gap-2",
+        "hover:bg-backdrop relative mb-4 flex cursor-pointer items-center rounded-md transition-colors",
+        isCollapsed ? "justify-center p-1" : "gap-2 p-2",
       )}
       title="New thread"
       {...props}
     >
-      <PlusIcon className="h-4 w-4 bg-green-600 rounded-full text-white" />
+      <IconPlus />
       <span
         className={cn(
-          "text-sm font-medium whitespace-nowrap absolute left-8 pb-[2px] ",
+          "absolute left-8 pb-[2px] text-sm font-medium whitespace-nowrap",
           isCollapsed
-            ? "opacity-0 max-w-0 overflow-hidden pointer-events-none"
-            : "opacity-100 transition-all duration-300 delay-100",
+            ? "pointer-events-none max-w-0 overflow-hidden opacity-0"
+            : "opacity-100 transition-all delay-100 duration-300",
         )}
       >
         New thread
@@ -287,6 +288,79 @@ const ThreadHistoryNewButton = React.forwardRef<
   );
 });
 ThreadHistoryNewButton.displayName = "ThreadHistory.NewButton";
+
+/**
+ * this user info section in thread history sidebar is just for demo purpose, you can replace it with anything you want, like links, docs, etc.
+ *
+ */
+
+type ScrollbarType = "profile" | "tool" | "auth";
+
+type ThreadActionProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  setActive: React.Dispatch<React.SetStateAction<ScrollbarType>>;
+};
+const ThreadUser = React.forwardRef<HTMLButtonElement, ThreadActionProps>(
+  ({ setActive, ...props }, ref) => {
+    const { isCollapsed } = useThreadHistoryContext();
+
+    return (
+      <button
+        ref={ref}
+        {...props}
+        onClick={() => setActive("profile")}
+        className={cn(
+          "hover:bg-backdrop relative mb-4 flex cursor-pointer items-center rounded-md transition-colors",
+          isCollapsed ? "justify-center p-1" : "gap-2 p-2",
+        )}
+      >
+        <IconUser />
+        <h1
+          className={cn(
+            "absolute left-8 pb-[2px] text-sm font-medium whitespace-nowrap",
+            isCollapsed
+              ? "pointer-events-none max-w-0 overflow-hidden opacity-0"
+              : "opacity-100 transition-all delay-100 duration-300",
+          )}
+        >
+          Dipanshu Vishwakarma
+        </h1>
+      </button>
+    );
+  },
+);
+
+ThreadUser.displayName = "ThreadHistory.User";
+const ThreadTool = React.forwardRef<HTMLButtonElement, ThreadActionProps>(
+  ({ setActive, ...props }, ref) => {
+    const { isCollapsed } = useThreadHistoryContext();
+
+    return (
+      <button
+        ref={ref}
+        {...props}
+        onClick={() => setActive("auth")}
+        className={cn(
+          "hover:bg-backdrop relative mb-4 flex cursor-pointer items-center rounded-md transition-colors",
+          isCollapsed ? "justify-center p-1" : "gap-2 p-2",
+        )}
+      >
+        <IconTool />
+        <h1
+          className={cn(
+            "absolute left-8 mt-1 ml-1 pb-[2px] text-sm font-medium whitespace-nowrap",
+            isCollapsed
+              ? "pointer-events-none max-w-0 overflow-hidden opacity-0"
+              : "opacity-100 transition-all delay-100 duration-300",
+          )}
+        >
+          Tools
+        </h1>
+      </button>
+    );
+  },
+);
+
+ThreadTool.displayName = "ThreadHistory.Tool";
 
 /**
  * Search input for filtering threads
@@ -309,15 +383,15 @@ const ThreadHistorySearch = React.forwardRef<
   };
 
   return (
-    <div ref={ref} className={cn("mb-4 relative", className)} {...props}>
+    <div ref={ref} className={cn("relative mb-4", className)} {...props}>
       {/*visible when collapsed */}
       <button
         onClick={expandOnSearch}
         className={cn(
-          "p-1 hover:bg-backdrop rounded-md cursor-pointer absolute left-1/2 -translate-x-1/2",
+          "hover:bg-backdrop absolute left-1/2 -translate-x-1/2 cursor-pointer rounded-md p-1",
           isCollapsed
-            ? "opacity-100 pointer-events-auto transition-all duration-300"
-            : "opacity-0 pointer-events-none",
+            ? "pointer-events-auto opacity-100 transition-all duration-300"
+            : "pointer-events-none opacity-0",
         )}
         title="Search threads"
       >
@@ -330,17 +404,17 @@ const ThreadHistorySearch = React.forwardRef<
         className={cn(
           //using this as wrapper
           isCollapsed
-            ? "opacity-0 pointer-events-none"
-            : "opacity-100 delay-100 transition-all duration-500",
+            ? "pointer-events-none opacity-0"
+            : "opacity-100 transition-all delay-100 duration-500",
         )}
       >
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <SearchIcon className="h-4 w-4 text-gray-400" />
         </div>
         <input
           ref={searchInputRef}
           type="text"
-          className="pl-10 pr-4 py-2 w-full text-sm rounded-md bg-container focus:outline-none"
+          className="bg-container w-full rounded-md py-2 pr-4 pl-10 text-sm focus:outline-none"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -472,7 +546,7 @@ const ThreadHistoryList = React.forwardRef<
     content = (
       <div
         ref={ref}
-        className={cn("text-sm text-muted-foreground p-2", className)}
+        className={cn("text-muted-foreground p-2 text-sm", className)}
         {...props}
       >
         Loading threads...
@@ -483,7 +557,7 @@ const ThreadHistoryList = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          `text-sm text-destructive p-2 whitespace-nowrap ${isCollapsed ? "opacity-0 max-w-0 overflow-hidden" : "opacity-100"}`,
+          `text-destructive p-2 text-sm whitespace-nowrap ${isCollapsed ? "max-w-0 overflow-hidden opacity-0" : "opacity-100"}`,
           className,
         )}
         {...props}
@@ -496,7 +570,7 @@ const ThreadHistoryList = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          `text-sm text-muted-foreground p-2 whitespace-nowrap ${isCollapsed ? "opacity-0 max-w-0 overflow-hidden" : "opacity-100"}`,
+          `text-muted-foreground p-2 text-sm whitespace-nowrap ${isCollapsed ? "max-w-0 overflow-hidden opacity-0" : "opacity-100"}`,
           className,
         )}
         {...props}
@@ -512,12 +586,12 @@ const ThreadHistoryList = React.forwardRef<
             key={thread.id}
             onClick={async () => await handleSwitchThread(thread.id)}
             className={cn(
-              "p-2 rounded-md hover:bg-backdrop cursor-pointer group flex items-center justify-between",
+              "hover:bg-backdrop group flex cursor-pointer items-center justify-between rounded-md p-2",
               currentThread?.id === thread.id ? "bg-muted" : "",
               editingThread?.id === thread.id ? "bg-muted" : "",
             )}
           >
-            <div className="text-sm flex-1">
+            <div className="flex-1 text-sm">
               {editingThread?.id === thread.id ? (
                 <form
                   onSubmit={handleNameSubmit}
@@ -529,11 +603,11 @@ const ThreadHistoryList = React.forwardRef<
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full bg-background px-1 text-sm font-medium focus:outline-none rounded-sm"
+                    className="bg-background w-full rounded-sm px-1 text-sm font-medium focus:outline-none"
                     onClick={(e) => e.stopPropagation()}
                     placeholder="Thread name..."
                   />
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-muted-foreground truncate text-xs">
                     {new Date(thread.createdAt).toLocaleString(undefined, {
                       month: "short",
                       day: "numeric",
@@ -544,10 +618,10 @@ const ThreadHistoryList = React.forwardRef<
                 </form>
               ) : (
                 <>
-                  <span className="font-medium line-clamp-1">
+                  <span className="line-clamp-1 font-medium">
                     {thread.name ?? `Thread ${thread.id.substring(0, 8)}`}
                   </span>
-                  <p className="text-xs text-muted-foreground truncate mt-1">
+                  <p className="text-muted-foreground mt-1 truncate text-xs">
                     {new Date(thread.createdAt).toLocaleString(undefined, {
                       month: "short",
                       day: "numeric",
@@ -573,10 +647,10 @@ const ThreadHistoryList = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "overflow-y-auto flex-1 transition-all duration-300 ease-in-out",
+        "flex-1 overflow-y-auto transition-all duration-300 ease-in-out",
         isCollapsed
-          ? "opacity-0 max-h-0 overflow-hidden pointer-events-none"
-          : "opacity-100 max-h-full pointer-events-auto",
+          ? "pointer-events-none max-h-0 overflow-hidden opacity-0"
+          : "pointer-events-auto max-h-full opacity-100",
         className,
       )}
       {...props}
@@ -603,20 +677,20 @@ const ThreadOptionsDropdown = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="p-1 hover:bg-backdrop rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          className="hover:bg-backdrop cursor-pointer rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100"
           onClick={(e) => e.stopPropagation()}
         >
-          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+          <MoreHorizontal className="text-muted-foreground h-4 w-4" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[160px] text-xs bg-popover rounded-md p-1 shadow-md border border-border"
+          className="bg-popover border-border min-w-[160px] rounded-md border p-1 text-xs shadow-md"
           sideOffset={5}
           align="end"
         >
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop rounded-sm cursor-pointer outline-none transition-colors"
+            className="text-foreground hover:bg-backdrop flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 transition-colors outline-none"
             onClick={(e) => {
               e.stopPropagation();
               onRename(thread);
@@ -626,7 +700,7 @@ const ThreadOptionsDropdown = ({
             Rename
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop rounded-sm cursor-pointer outline-none transition-colors"
+            className="text-foreground hover:bg-backdrop flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 transition-colors outline-none"
             onClick={(e) => {
               e.stopPropagation();
               onGenerateName(thread);
@@ -648,4 +722,6 @@ export {
   ThreadHistoryNewButton,
   ThreadHistorySearch,
   ThreadOptionsDropdown,
+  ThreadUser,
+  ThreadTool,
 };

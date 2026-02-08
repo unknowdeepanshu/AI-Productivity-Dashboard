@@ -4,6 +4,7 @@ import { MessageThreadFull } from "@/components/tambo/message-thread-full";
 import { useMcpServers } from "@/components/tambo/mcp-config-modal";
 import { components, tools } from "@/lib/tambo";
 import { TamboProvider } from "@tambo-ai/react";
+import { CustomThreadFull } from "@/components/tambo/custom-chat-design";
 
 /**
  * Home page component that renders the Tambo chat interface.
@@ -28,7 +29,8 @@ export default function Home() {
       mcpServers={mcpServers}
     >
       <div className="h-screen">
-        <MessageThreadFull />
+        {/* <MessageThreadFull /> */}
+        <CustomThreadFull />
       </div>
     </TamboProvider>
   );
